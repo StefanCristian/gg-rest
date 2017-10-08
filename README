@@ -1,0 +1,46 @@
+ALPHA RESTful server for Argent project
+Demo implementation
+=================================
+
+How to compile:
+
+* Make sure you have GO version 1.8.3+
+* Only usable on Gentoo-based distros, for now.
+
+git clone https://github.com/StefanCristian/poc-rest
+
+* Set GOPATH=<path/to/the/cloned/folder/poc-rest>
+* Set GOROOT to where golang is installed!
+* Get into folder called poc-rest/src and:
+
+go get -u gitlab.com/stefancristian/mux
+
+go build
+
+=================================
+
+How to use:
+
+Once started the server, the only functions it will take right now are:
+- Getting all available commands with "GET" on port 8003 ( which cannot be changed )
+- POST request on http://<IP>:8003/installation/install_pkg with a json body as:
+{ "emerge" : "<any-package-name>" }
+The POST request on that specific link will trigger the installation of any package
+you parse it to. It takes only known packages, search function is not implemented yet
+- Getting a demo function installation through POST request on http://<IP>:8003/installation
+This POST request will install the demo package named "argent-skel", it can be changed only
+from the code right now, to have an idea what's about to happen in the future.
+- Getting all available commands by using "GET" method on http://<IP>:8003/allcommands
+The link, if using "GET", will show-up all the available command which were setup in
+gentoo_commands.json through the standard json format ( "emerge" : "emerge" )
+
+==================================
+
+To be implemented:
+
+* Code refactoring, making things more dynamic
+* Full search using GET through Gentoo Portage package manager
+* More dynamic configuration of the REST server
+* Database support
+* Logging support
+* Service management through systemctl / openRC

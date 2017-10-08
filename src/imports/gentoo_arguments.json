@@ -1,0 +1,6 @@
+[
+  {
+    "install": " -v --nodeps ",
+    "remove": "unmerge"
+  }
+]
