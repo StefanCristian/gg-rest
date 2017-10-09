@@ -82,10 +82,9 @@ func SpecificInstallation(w http.ResponseWriter, r *http.Request) {
 			os.Stderr.WriteString(err.Error())
 			WriteJson(w, "Installation failed, internal server error.", string(specificPkg.Commands))
 		} else {
-			WriteJson(w, "Package installed successfully!", string(specificPkg.Commands) )
 			fmt.Print(string(cmdOutput.Bytes()))
 		}
-		WriteJson(w, "Program installed successfully", string(specificPkg.Commands))
+		WriteJson(w, "Program installed successfully:", string(specificPkg.Commands))
 	}
 }
 
