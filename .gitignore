@@ -1,4 +1,6 @@
 .idea/
+src/src
+src/src.exe
 pkg/
 github.com/
 gitlab.com/
