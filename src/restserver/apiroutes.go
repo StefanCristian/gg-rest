@@ -44,6 +44,6 @@ var restroutes = Routes {
 	Route{
 		Method:       "POST",
 		Pattern:      specificInstallation,
-		HandlerFunc:  SpecificInstallation,
+		HandlerFunc:  SpecificSinglePkgInstallation,
 	},
 }

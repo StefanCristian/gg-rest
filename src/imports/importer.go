@@ -29,6 +29,23 @@ func ImportCommands() []datamodel.GentooCommands {
 	return commands
 }
 
+func ImportPackageList() []datamodel.PackagesInputs {
+	importedList, err := ioutil.ReadFile("src/imports/gentoo_pkg_inputs.json")
+	if err != nil {
+		fmt.Printf("Failed to read src/imports/gentoo_pkg_inputs.json")
+		os.Exit(1)
+	}
+
+	var pkgsList []datamodel.PackagesInputs
+
+	err = json.Unmarshal(importedList, &pkgsList)
+	if err != nil {
+		fmt.Printf("Failed to unmarshal package lists: %s\n", err)
+		os.Exit(1)
+	}
+	return pkgsList
+}
+
 // Imported Arguments are subject to change soon enough
 // They implement future functions related to the commands sections
 // Not used for the moment

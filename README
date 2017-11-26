@@ -7,11 +7,11 @@ How to compile:
 * Make sure you have GO version 1.8.3+
 * Only usable on Gentoo-based distros, for now.
 
-git clone https://github.com/StefanCristian/poc-rest
+git clone https://github.com/StefanCristian/gg-rest
 
-* Set GOPATH=<path/to/the/cloned/folder/poc-rest>
+* Set GOPATH=<path/to/the/cloned/folder/gg-rest>
 * Set GOROOT to where golang is installed!
-* Get into folder called poc-rest/src and:
+* Get into folder called gg-rest/src and:
 
 go get -u gitlab.com/stefancristian/mux
 
@@ -24,9 +24,11 @@ How to use:
 Once started the server, the only functions it will take right now are:
 - Getting all available commands with "GET" on port 8003 ( which cannot be changed )
 - POST request on http://<IP>:8003/installation/install_pkg with a json body as:
-{ "emerge" : "<any-package-name>" }
+{ "packages" : "<any-package-name>" }
+The install_pkg path does not take multiple packages.
+The install_pkg path does not take [space] between json elements.
 The POST request on that specific link will trigger the installation of any package
-you parse it to. It takes only known packages, search function is not implemented yet
+you parse it to. It takes existing packages, it does not have exit status codes yet.
 - Getting a demo function installation through POST request on http://<IP>:8003/installation
 This POST request will install the demo package named "argent-skel", it can be changed only
 from the code right now, to have an idea what's about to happen in the future.
@@ -39,8 +41,10 @@ gentoo_commands.json through the standard json format ( "emerge" : "emerge" )
 To be implemented:
 
 * Code refactoring, making things more dynamic
+* Exit codes from Portage materialized
+* Manipulate and control json inputs
 * Full search using GET through Gentoo Portage package manager
 * More dynamic configuration of the REST server
 * Database support
 * Logging support
-* Service management through systemctl / openRC
+* Service management

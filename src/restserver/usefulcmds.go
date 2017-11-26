@@ -33,7 +33,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func ParseJson(jsonByteArray []byte, jsonStruct interface{}) (error) {
-	err := json.Unmarshal(jsonByteArray, &jsonStruct);
+	err := json.Unmarshal(jsonByteArray, &jsonStruct)
 	if err != nil {
 		fmt.Println("An error ocurred: ", err)
 	}

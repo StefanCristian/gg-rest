@@ -13,8 +13,10 @@ import (
 )
 
 type GCommands []datamodel.GentooCommands
+type PkgLists []datamodel.PackagesInputs
 
 var commands GCommands = imports.ImportCommands()
+var packages PkgLists = imports.ImportPackageList()
 
 func GetAllCommands(w http.ResponseWriter, r *http.Request) {
 	WriteJson(w, commands, "")
@@ -31,26 +33,35 @@ func (a *GCommands) get(firstCommand string) (datamodel.GentooCommands, error) {
 	return commands, err
 }
 
-// InstallDemoProgram function implements reading from a standard file.json
-// and decoding the json for providing the exact style and model
-func InstallDemoProgram(w http.ResponseWriter, r *http.Request) {
-	ArgumentSecond := "-v"
-	ArgumentZero := "argent-skel"
+// Implement a most simple get portage path
+func GetGentooPortagePath() string {
 
-	openJsonFile, err := os.Open("src/imports/godemoexec.json")
+	openJsonFile, err := os.Open("src/imports/GentooPortage.json")
 	if err != nil {
 		fmt.Printf("Failed to open file, dying.\n")
 		panic(err)
 	}
 
 	decoder := json.NewDecoder(openJsonFile)
-	pkgconfig := &datamodel.GentooCommands{}
-	decoder.Decode(&pkgconfig)
+	gentooPortage := &datamodel.GentooCommands{}
+	decoder.Decode(&gentooPortage)
 
-	cmd := exec.Command(pkgconfig.Commands,  ArgumentZero, ArgumentSecond)
+	return gentooPortage.Commands
+}
+
+
+// InstallDemoProgram function implements reading from a standard file.json
+// and decoding the json for providing the exact style and model
+// Alternative method to the bellow suggested "SpecificInstallation"
+// I think this soon will overthrow the other
+func InstallDemoProgram(w http.ResponseWriter, r *http.Request) {
+	ArgumentSecond := "-v"
+	ArgumentZero := "argent-skel"
+
+	cmd := exec.Command(GetGentooPortagePath(),  ArgumentZero, ArgumentSecond)
 	cmdOutput := &bytes.Buffer{}
 	cmd.Stdout = cmdOutput
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		os.Stderr.WriteString(err.Error())
 		WriteJson(w, "Installation failed: : \n", ArgumentZero)
@@ -67,24 +78,27 @@ func InstallDemoProgram(w http.ResponseWriter, r *http.Request) {
 // The method does NOT search through available Argent packages
 // Until 'search' method is implemented, take your chances with this function
 // without any fuss.
-func SpecificInstallation(w http.ResponseWriter, r *http.Request) {
-	var specificPkg datamodel.GentooCommands
+// Does not take a list [as specific in the name of the function]
+// Does not understand [SPACE] between json elements
+func SpecificSinglePkgInstallation(w http.ResponseWriter, r *http.Request) {
+	var specificPkg datamodel.PackagesInputs
+
 	bytesPkg, _ := ioutil.ReadAll(r.Body)
 	err := json.Unmarshal(bytesPkg, &specificPkg)
 	if err != nil {
 		fmt.Fprintf(w, "Failed to unmarshal: %s\n", err)
 	} else {
-		cmd := exec.Command("/usr/lib/python-exec/python2.7/emerge", string(specificPkg.Commands), "-v")
+		cmd := exec.Command(GetGentooPortagePath(), string(specificPkg.Packages), "-v")
 		cmdOutput := &bytes.Buffer{}
 		cmd.Stdout = cmdOutput
 		err := cmd.Run()
 		if err != nil {
 			os.Stderr.WriteString(err.Error())
-			WriteJson(w, "Installation failed, internal server error.", string(specificPkg.Commands))
+			WriteJson(w, "Package not found or body corrupted. Try without [space] between json elements.", string(specificPkg.Packages))
 		} else {
 			fmt.Print(string(cmdOutput.Bytes()))
+			WriteJson(w, "Program installed successfully:", string(specificPkg.Packages))
 		}
-		WriteJson(w, "Program installed successfully:", string(specificPkg.Commands))
 	}
 }
 
