@@ -17,7 +17,7 @@ type PkgLists []datamodel.PackagesInputs
 
 var commands GCommands = imports.ImportCommands()
 
-func GetAllCommands(w http.ResponseWriter) {
+func GetAllCommands(w http.ResponseWriter, r *http.Request) {
 	WriteJson(w, commands, "")
 }
 
@@ -53,7 +53,7 @@ func GetGentooPortagePath() string {
 // and decoding the json for providing the exact style and model
 // Alternative method to the bellow suggested "SpecificInstallation"
 // I think this soon will overthrow the other
-func InstallDemoProgram(w http.ResponseWriter) {
+func InstallDemoProgram(w http.ResponseWriter, r *http.Request) {
 	ArgumentSecond := "-v"
 	ArgumentZero := "argent-skel"
 
