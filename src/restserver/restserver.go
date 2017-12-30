@@ -3,7 +3,7 @@ package restserver
 import (
 	"net/http"
 	"os"
-	"gitlab.com/stefancristian/mux"
+	"github.com/stefancristian/mux"
 )
 
 const RESTAPI_PORT_NAME = "API_PORT"
@@ -27,7 +27,7 @@ func StartRestServer() {
 // os.Getenv will not get the value from anything else or nowhere else
 // than declaring its constant at line 10
 func getPort() string {
-	var port string = os.Getenv(RESTAPI_PORT_NAME)
+	var port = os.Getenv(RESTAPI_PORT_NAME)
 	if port != "" {
 		return port
 	} else {

@@ -103,7 +103,7 @@ func SpecificSinglePkgInstallation(w http.ResponseWriter, r *http.Request) {
 
 // to be used and refactored in the future
 func (a *GCommands) CommandListUpdate(updatedPkg datamodel.GentooCommands) (datamodel.GentooCommands, error) {
-	var err error = fmt.Errorf("Could not find commands \n")
+	var err = fmt.Errorf("Could not find commands \n")
 	var newPkg GCommands
 	for _, packages := range *a {
 		if packages.Commands != updatedPkg.Commands {
